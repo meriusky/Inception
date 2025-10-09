@@ -11,7 +11,7 @@ services:
       - .env
     networks:
       - inception
-    restart: unless-stopped #always (maybe)
+    restart: always
 
 #WordPress
   wordpress:
@@ -26,7 +26,7 @@ services:
     networks:
       - inception
 
-    restart: unless-stopped #always (maybe)
+    restart: always
 
 #NGINX
   nginx:
@@ -40,7 +40,7 @@ services:
       - wordpress_data:/var/www/html
     networks:
       - inception
-    restart: unless-stopped #always (maybe)
+    restart: always
 
 volumes:
   mariadb_data:
