@@ -1,20 +1,19 @@
-#version: '3.8'
 
 services:
+#MariaDB
   mariadb:
-    build: ./requirements/mariadb
+    # build: ./requirements/mariadb
+    image: mariadb:12.0.2
     container_name: mariadb
     volumes:
       - mariadb_data:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
-      - MYSQL_DATABASE=wordpress
-      - MYSQL_USER=wp_user
-      - MYSQL_PASSWORD=wp_pass
+    env_file:
+      - .env
     networks:
       - inception
-    restart: unless-stopped
+    restart: unless-stopped #always (maybe)
 
+#WordPress
   wordpress:
     build: ./requirements/wordpress
     container_name: wordpress
@@ -22,15 +21,14 @@ services:
       - mariadb
     volumes:
       - wordpress_data:/var/www/html
-    environment:
-      - WORDPRESS_DB_HOST=mariadb:3306
-      - WORDPRESS_DB_USER=wp_user
-      - WORDPRESS_DB_PASSWORD=wp_pass
-      - WORDPRESS_DB_NAME=wordpress
+    env_file:
+      - .env
     networks:
       - inception
-    restart: unless-stopped
 
+    restart: unless-stopped #always (maybe)
+
+#NGINX
   nginx:
     build: ./requirements/nginx
     container_name: nginx
@@ -42,7 +40,7 @@ services:
       - wordpress_data:/var/www/html
     networks:
       - inception
-    restart: unless-stopped
+    restart: unless-stopped #always (maybe)
 
 volumes:
   mariadb_data:
