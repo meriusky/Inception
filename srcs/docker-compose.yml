@@ -2,11 +2,12 @@
 services:
 #MariaDB
   mariadb:
-    # build: ./requirements/mariadb
-    image: mariadb:12.0.2
+    build: ./requirements/mariadb
+      #image: mariadb:12.0.2
     container_name: mariadb
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - /home/mehernan/data/mariadb:/var/lib/mysql #me da miedo este cambio
+      #      - mariadb_data:/var/lib/mysql
     env_file:
       - .env
     networks:

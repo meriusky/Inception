@@ -1,15 +1,19 @@
-# Use the official MariaDB image as base
-FROM mariadb:latest
+# Start from Debian
+FROM debian:bullseye
 
-# Set environment variables for the root password and database (these can be overridden in docker-compose.yml)
-ENV MYSQL_ROOT_PASSWORD=rootpassword
-ENV MYSQL_DATABASE=wordpress
-ENV MYSQL_USER=wp_user
-ENV MYSQL_PASSWORD=wp_pass
+# Install MariaDB
+RUN apt-get update && apt-get install -y mariadb-server && rm -rf /var/lib/apt/lists/*
 
-# Expose default MariaDB port
+# Copy initialization scripts (we’ll create them next)
+COPY ./tools/setup.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/setup.sh
+
+# Copy custom MariaDB configuration (optional, for security tuning)
+COPY ./conf/my.cnf /etc/mysql/my.cnf
+
+# Expose default port
 EXPOSE 3306
 
-# Use the default command from the MariaDB image
-CMD ["mysqld"]
+# Start MariaDB via setup script (handles secure setup & user creation)
+ENTRYPOINT ["bash", "/usr/local/bin/setup.sh"]
 
