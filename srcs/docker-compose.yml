@@ -1,35 +1,32 @@
-
 services:
-#MariaDB
+  # MariaDB
   mariadb:
     build: ./requirements/mariadb
-      #image: mariadb:12.0.2
+    # image: mariadb:12.0.2
     container_name: mariadb
     volumes:
-      - src_mariadb_data:/var/lib/mysql #me da miedo este cambio
-     #- mariadb_data:/home/mysqluser/data/
+      - mariadb_data:/var/lib/mysql
     env_file:
       - .env
     networks:
       - inception
     restart: always
 
-#WordPress
+  # WordPress
   wordpress:
     build: ./requirements/wordpress
     container_name: wordpress
     depends_on:
       - mariadb
     volumes:
-      - src_wordpress_data:/var/www/html
+      - wordpress_data:/var/www/html
     env_file:
       - .env
     networks:
       - inception
-
     restart: always
 
-#NGINX
+  # NGINX
   nginx:
     build: ./requirements/nginx
     container_name: nginx
@@ -45,17 +42,18 @@ services:
 
 volumes:
   mariadb_data:
-    driver:local
+    driver: local
     driver_opts:
-      device: "home/mehernan/data/mariadb"
-      o:bind
-      type:none
+      type: none
+      o: bind
+      device: "/home/mehernan/data/mariadb"
+
   wordpress_data:
-    driver:local
+    driver: local
     driver_opts:
-      device:"home/mehernan/data/wordpress"
-      o:bind
-      type:none 
+      type: none
+      o: bind
+      device: "/home/mehernan/data/wordpress"
 
 networks:
   inception:
