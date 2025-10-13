@@ -6,8 +6,8 @@ services:
       #image: mariadb:12.0.2
     container_name: mariadb
     volumes:
-      - /home/mehernan/data/mariadb:/var/lib/mysql #me da miedo este cambio
-      #      - mariadb_data:/var/lib/mysql
+     # - /home/mehernan/data/mariadb:/var/lib/mysql #me da miedo este cambio
+     - mariadb_data:/home/mysqluser/data/
     env_file:
       - .env
     networks:
