@@ -4,6 +4,7 @@ set -e
 # Wait for MariaDB to be ready
 echo "⏳ Waiting for MariaDB..."
 until mysqladmin ping -h"$WORDPRESS_DB_HOST" --silent; do
+	echo "holiii"
     sleep 1
 done
 

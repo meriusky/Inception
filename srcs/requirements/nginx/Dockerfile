@@ -23,7 +23,7 @@ RUN openssl req -x509 -nodes -days 365 \
 RUN openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 
 # 7️⃣ Copy custom NGINX config
-COPY nginx.conf /etc/nginx/conf/nginx.conf
+COPY conf/nginx.conf /etc/nginx/nginx.conf
 
 # 8️⃣ Expose HTTPS port only
 EXPOSE 443
