@@ -10,7 +10,7 @@ MARKER="$DATADIR/.initialized"
 # Ensure dirs and ownership
 mkdir -p /run/mysqld "$DATADIR"
 chown -R "$OSUSER:$OSUSER" /run/mysqld "$DATADIR"
-
+echo "holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 # First-time initialization: create system tables in custom datadir
 if [ ! -d "$DATADIR/mysql" ]; then
   mariadb-install-db --user="$OSUSER" --datadir="$DATADIR" >/dev/null 2>&1
@@ -18,7 +18,7 @@ fi
 
 # Only run bootstrap SQL once
 INIT_SQL=""
-if [ ! -f "$MARKER" ]; then
+#if [ ! -f "$MARKER" ]; then
   INIT_SQL="/tmp/init.sql"
   : > "$INIT_SQL"
 
@@ -39,12 +39,12 @@ if [ ! -f "$MARKER" ]; then
 
   # 3) Create database and normal user if vars exist
   if [ -n "${MYSQL_DATABASE:-}" ]; then
-    echo "CREATE DATABASE IF NOT EXISTS \${MYSQL_DATABASE}\ CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;" >> "$INIT_SQL"
+    echo "CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;" >> "$INIT_SQL"
   fi
   if [ -n "${MYSQL_USER:-}" ] && [ -n "${MYSQL_PASSWORD:-}" ]; then
     echo "CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';" >> "$INIT_SQL"
     if [ -n "${MYSQL_DATABASE:-}" ]; then
-      echo "GRANT ALL PRIVILEGES ON \${MYSQL_DATABASE}\.* TO '${MYSQL_USER}'@'%';" >> "$INIT_SQL"
+      echo "GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';" >> "$INIT_SQL"
     fi
     echo "FLUSH PRIVILEGES;" >> "$INIT_SQL"
   fi
@@ -52,10 +52,11 @@ if [ ! -f "$MARKER" ]; then
   chown "$OSUSER:$OSUSER" "$INIT_SQL"
   # Mark as initialized so this block is skipped on future container starts
   touch "$MARKER"
-fi
+#fi
 
 # Start server (one-time SQL via --init-file only on first run)
 if [ -n "$INIT_SQL" ] && [ -s "$INIT_SQL" ]; then
+	echo "diegooo"
   exec mysqld --user="$OSUSER" --datadir="$DATADIR" --bind-address="$BIND" --init-file="$INIT_SQL"
 else
   exec mysqld --user="$OSUSER" --datadir="$DATADIR" --bind-address="$BIND"
