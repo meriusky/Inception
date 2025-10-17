@@ -1,12 +1,16 @@
 #!/bin/bash
 set -e
 
+# Change to WordPress directory
+cd /var/www/html
+
 # Wait for MariaDB to be ready
 echo "⏳ Waiting for MariaDB..."
-until mysqladmin ping -h"$WORDPRESS_DB_HOST" --silent; do
-	echo "holiii"
-    sleep 1
+until mysqladmin ping -h"$WORDPRESS_DB_HOST" -u "$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --silent; do
+    echo "⏳ MariaDB is unavailable - waiting..."
+    sleep 2
 done
+echo "✅ MariaDB is ready!"
 
 # Generate wp-config.php if it doesn’t exist
 if [ ! -f wp-config.php ]; then

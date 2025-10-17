@@ -5,9 +5,9 @@ services:
     # image: mariadb:12.0.2
     container_name: mariadb
     ports: #changed
-      - 3306:3306
+      - 127.0.0.1:3306:3306
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - mariadb_data:/home/mysqluser/data
     env_file:
       - .env
     networks:
@@ -35,7 +35,7 @@ services:
     depends_on:
       - wordpress
     ports:
-      - "443:443"
+      - "127.0.0.1:443:443"
     volumes:
       - wordpress_data:/var/www/html
     networks:
@@ -44,18 +44,8 @@ services:
 
 volumes:
   mariadb_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: "/home/mehernan/data/mariadb"
-
   wordpress_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: "/home/mehernan/data/wordpress"
+
 
 networks:
   inception:

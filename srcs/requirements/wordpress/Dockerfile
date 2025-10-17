@@ -34,11 +34,16 @@ RUN wget https://wordpress.org/latest.tar.gz && \
 COPY tools/wp-setup.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/wp-setup.sh
 
-# Adjust PHP-FPM to listen on port 9000
-RUN sed -i 's|listen = /run/php/php7.4-fpm.sock|listen = 9000|' /etc/php/7.4/fpm/pool.d/www.conf
+# Adjust PHP-FPM to listen on port 9000 and be accessible from other containers
+RUN sed -i 's|listen = /run/php/php7.4-fpm.sock|listen = 0.0.0.0:9000|' /etc/php/7.4/fpm/pool.d/www.conf && \
+    sed -i 's|;clear_env = no|clear_env = no|' /etc/php/7.4/fpm/pool.d/www.conf
+RUN mkdir -p /run/php
+
+# Set proper ownership for WordPress files
+RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 9000
 
 ENTRYPOINT ["wp-setup.sh"]
-CMD ["php-fpm7.4", "-F"]
-
+CMD ["php-fpm7.4", "-F", "-R"]
+# ENTRYPOINT ["bash", "-c", "while true; do sleep 60; done"]
