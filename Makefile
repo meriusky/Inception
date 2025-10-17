@@ -1,22 +1,32 @@
-NAME= inception
+NAME = inception
+COMPOSE = docker compose -f srcs/docker-compose.yml
 
+# Default rule
 all: up
 
+# 1.1 make or make up → builds and starts containers
 up:
-	docker compose -f srcs/docker-compose.yml up -d --build
+	@$(COMPOSE) up -d --build
+	@echo "✅  Containers up and running! All done."
 
+# Stops and removes containers and networks (but not volumes)
 down:
-	docker compose -f srcs/docker-compose.yml down
+	@$(COMPOSE) down
+	@echo "🛑  Containers stopped and removed."
 
-re: down up
+# 1.2 make clean → stops and removes containers and images
+clean: down
+	@docker system prune -af
+	@echo "🧹  Docker system cleaned (containers, images, networks)."
 
-clean:
-	docker system prune -af
-	docker volume prune -f
-#puede que no funcione checkear php-fpm is running correctly
-check-php-fpm:
-	docker compose exec wordpress ps aux | grep php-fpm
-check-php-fpm-curl:
-	docker compose exec wordpress curl -i http://127.0.0.1:9000
+# 1.3 make fclean → also removes volumes
+fclean: clean
+	@docker volume prune -f
+	@docker network prune -f
+	@echo "🔥  Full cleanup complete (volumes removed)."
 
-.PHONY: all up re clean
+# 1.4 make re → rebuilds everything from scratch
+re: fclean all
+
+.PHONY: all up down clean fclean re
+
