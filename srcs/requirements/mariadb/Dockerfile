@@ -7,11 +7,11 @@ RUN useradd -m -s /bin/bash mysqluser
 RUN mkdir -p /home/mysqluser/data && chown -R mysqluser:mysqluser /home/mysqluser/data 
 VOLUME /home/mysqluser/data
 
-# Copy initialization scripts (we’ll create them next)
+# Copy initialization scripts 
 COPY ./tools/setup.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/setup.sh
 
-# Copy custom MariaDB configuration (optional, for security tuning)
+# Copy custom MariaDB configuration
 COPY ./conf/my.cnf /etc/mysql/my.cnf
 
 # Expose default port
