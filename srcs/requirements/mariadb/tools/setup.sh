@@ -2,8 +2,7 @@
 set -e
 
 # Minimal settings
-#DATADIR="/home/mysqluser/data" cambio
-DATADIR="/var/lib/mysql"
+DATADIR="/home/mysqluser/data"
 OSUSER="mysqluser"
 BIND="0.0.0.0"
 MARKER="$DATADIR/.initialized"
@@ -11,23 +10,22 @@ MARKER="$DATADIR/.initialized"
 # Ensure dirs and ownership
 mkdir -p /run/mysqld "$DATADIR"
 chown -R "$OSUSER:$OSUSER" /run/mysqld "$DATADIR"
-
 echo "holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-# Initialize MAriadb data directory if empty 
+# First-time initialization: create system tables in custom datadir
 if [ ! -d "$DATADIR/mysql" ]; then
-  mariadb-install-db --user="$OSUSER" --datadir="$DATADIR" >/dev/null 2>&1 
+  mariadb-install-db --user="$OSUSER" --datadir="$DATADIR" >/dev/null 2>&1
 fi
 
 # Only run bootstrap SQL once
 INIT_SQL=""
-if [ ! -f "$MARKER" ]; then #cambio
+#if [ ! -f "$MARKER" ]; then
   INIT_SQL="/tmp/init.sql"
   : > "$INIT_SQL"
 
   # 1) Set root password if provided
   if [ -n "${MYSQL_ROOT_PASSWORD:-}" ]; then
     echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';" >> "$INIT_SQL"
-   # echo "FLUSH PRIVILEGES;" >> "$INIT_SQL" #cambio
+    echo "FLUSH PRIVILEGES;" >> "$INIT_SQL"
   fi
 
   # 2) Create admin user if both admin vars exist (supporting the provided name; pass var typo handled)
@@ -48,18 +46,16 @@ if [ ! -f "$MARKER" ]; then #cambio
     if [ -n "${MYSQL_DATABASE:-}" ]; then
       echo "GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';" >> "$INIT_SQL"
     fi
-  #  echo "FLUSH PRIVILEGES;" >> "$INIT_SQL" #cambio
+    echo "FLUSH PRIVILEGES;" >> "$INIT_SQL"
   fi
-  echo "FLUSH PRIVILEGES;" >> "$INIT_SQL" #cambio: anyadido
 
-  touch "$MAKER" #cambio
   chown "$OSUSER:$OSUSER" "$INIT_SQL"
   # Mark as initialized so this block is skipped on future container starts
-#  touch "$MARKER" #cambio movido
+  touch "$MARKER"
 #fi
 
 # Start server (one-time SQL via --init-file only on first run)
-#if [ -n "$INIT_SQL" ] && [ -s "$INIT_SQL" ]; then #cambio
+if [ -n "$INIT_SQL" ] && [ -s "$INIT_SQL" ]; then
 	echo "diegooo"
   exec mysqld --user="$OSUSER" --datadir="$DATADIR" --bind-address="$BIND" --init-file="$INIT_SQL"
 else
