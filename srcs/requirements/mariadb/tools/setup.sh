@@ -3,9 +3,12 @@ set -e
 
 # Minimal settings
 #DATADIR="/home/mysqluser/data" cambio
-DATADIR="/var/lib/mysql"
-OSUSER="mysqluser"
-BIND="0.0.0.0"
+#DATADIR="/var/lib/mysql"
+#OSUSER="mysqluser"
+#BIND="0.0.0.0"
+#MARKER="$DATADIR/.initialized"
+DATADIR="${DATADIR:-/var/lib/mysql}"
+OSUSER="${OSUSER:-mysql}"
 MARKER="$DATADIR/.initialized"
 
 # Ensure dirs and ownership
@@ -15,12 +18,12 @@ chown -R "$OSUSER:$OSUSER" /run/mysqld "$DATADIR"
 echo "holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 mkdir -p "$DATADIR"
 chown -R "$OSUSER:$OSUSER" "$DATADIR"
-MARKER="$DATADIR/.initialized"
+#MARKER="$DATADIR/.initialized"
 touch "$MARKER"
 
 echo "DATADIR is: $DATADIR"
 echo "MARKER is: $MARKER"
-
+echo "OSUSER is: '$OSUSER'"
 # Initialize MAriadb data directory if empty 
 if [ ! -d "$DATADIR/mysql" ]; then
   mariadb-install-db --user="$OSUSER" --datadir="$DATADIR"# >/dev/null 2>&1 cambio
