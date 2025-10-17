@@ -15,12 +15,12 @@ chown -R "$OSUSER:$OSUSER" /run/mysqld "$DATADIR"
 echo "holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 # Initialize MAriadb data directory if empty 
 if [ ! -d "$DATADIR/mysql" ]; then
-  mariadb-install-db --user="$OSUSER" --datadir="$DATADIR"# >/dev/null 2>&1 cambio
+  mariadb-install-db --user="$OSUSER" --datadir="$DATADIR" >/dev/null 2>&1 
 fi
 
 # Only run bootstrap SQL once
 INIT_SQL=""
-if [ ! -f "$MARKER" ]; then#cambio (estaba comentado)
+if [ ! -f "$MARKER" ]; then #cambio
   INIT_SQL="/tmp/init.sql"
   : > "$INIT_SQL"
 
