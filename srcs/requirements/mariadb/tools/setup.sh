@@ -13,6 +13,14 @@ mkdir -p /run/mysqld "$DATADIR"
 chown -R "$OSUSER:$OSUSER" /run/mysqld "$DATADIR"
 
 echo "holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+mkdir -p "$DATADIR"
+chown -R "$OSUSER:$OSUSER" "$DATADIR"
+MARKER="$DATADIR/.initialized"
+touch "$MARKER"
+
+echo "DATADIR is: $DATADIR"
+echo "MARKER is: $MARKER"
+
 # Initialize MAriadb data directory if empty 
 if [ ! -d "$DATADIR/mysql" ]; then
   mariadb-install-db --user="$OSUSER" --datadir="$DATADIR"# >/dev/null 2>&1 cambio
