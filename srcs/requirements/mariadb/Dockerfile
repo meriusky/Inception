@@ -19,5 +19,4 @@ EXPOSE 3306
 
 # Start MariaDB via setup script (handles secure setup & user creation)
 ENTRYPOINT ["/usr/local/bin/setup.sh"]
-#ENTRYPOINT ["bash", "-c", "while true; do sleep 60; done"]
 

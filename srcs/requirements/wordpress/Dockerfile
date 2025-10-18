@@ -46,4 +46,3 @@ EXPOSE 9000
 
 ENTRYPOINT ["wp-setup.sh"]
 CMD ["php-fpm7.4", "-F", "-R"]
-# ENTRYPOINT ["bash", "-c", "while true; do sleep 60; done"]
