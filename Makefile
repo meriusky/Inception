@@ -26,7 +26,7 @@ fclean: clean
 	@echo "🔥  Full cleanup complete (volumes removed)."
 
 # 1.4 make re → rebuilds everything from scratch
-re: fclean all
+re: fclean up
 
 .PHONY: all up down clean fclean re
 
