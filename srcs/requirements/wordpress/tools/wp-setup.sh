@@ -1,21 +1,18 @@
 #!/bin/bash
 set -e
 
+# Change to WordPress directory
+cd /var/www/html
+
 # Wait for MariaDB to be ready
 echo "⏳ Waiting for MariaDB..."
-until mysqladmin ping -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --silent; do
+until mysqladmin ping -h"$WORDPRESS_DB_HOST" -u "$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --silent; do
     echo "⏳ MariaDB is unavailable - waiting..."
     sleep 2
 done
 echo "✅ MariaDB is ready!"
 
-# Additional wait to ensure privileges are loaded
-sleep 2
-
-# Change to WordPress directory
-cd /var/www/html
-
-# Generate wp-config.php if it doesn't exist
+# Generate wp-config.php if it doesn’t exist
 if [ ! -f wp-config.php ]; then
     echo "🧩 Setting up wp-config.php..."
     wp config create \
@@ -26,8 +23,6 @@ if [ ! -f wp-config.php ]; then
         --dbhost="$WORDPRESS_DB_HOST" \
         --path=/var/www/html
 fi
-
-echo "HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA :D"
 
 # Run WordPress installation if not already installed
 if ! wp core is-installed --allow-root; then
@@ -43,3 +38,4 @@ fi
 
 echo "✅ WordPress is ready!"
 exec "$@"
+

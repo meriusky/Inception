@@ -2,7 +2,7 @@
 set -e
 
 # Minimal settings
-DATADIR="/var/lib/mysql"
+DATADIR="/home/mysqluser/data"
 OSUSER="mysqluser"
 BIND="0.0.0.0"
 MARKER="$DATADIR/.initialized"
@@ -18,16 +18,17 @@ fi
 
 # Only run bootstrap SQL once
 INIT_SQL=""
-if [ ! -f "$MARKER" ]; then
+if [ ! -f "$MARKER" ]; then #cambio
   INIT_SQL="/tmp/init.sql"
   : > "$INIT_SQL"
 
   # 1) Set root password if provided
   if [ -n "${MYSQL_ROOT_PASSWORD:-}" ]; then
     echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';" >> "$INIT_SQL"
+   # echo "FLUSH PRIVILEGES;" >> "$INIT_SQL" #cambio
   fi
 
-  # 2) Create admin user if both admin vars exist
+  # 2) Create admin user if both admin vars exist (supporting the provided name; pass var typo handled)
   ADMIN_USER="${MYSQL_ADMIN_USER:-}"
   ADMIN_PASS="${MYSQL_ADMIN_PASS:-}"
   if [ -n "$ADMIN_USER" ] && [ -n "$ADMIN_PASS" ]; then
@@ -46,9 +47,9 @@ if [ ! -f "$MARKER" ]; then
     if [ -n "${MYSQL_DATABASE:-}" ]; then
       echo "GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';" >> "$INIT_SQL"
     fi
+  #  echo "FLUSH PRIVILEGES;" >> "$INIT_SQL" #cambio
   fi
-  
-  echo "FLUSH PRIVILEGES;" >> "$INIT_SQL"
+  echo "FLUSH PRIVILEGES;" >> "$INIT_SQL" #cambio: anyadido
 
   # Mark as initialized so this block is skipped on future container starts
   touch "$MARKER"
