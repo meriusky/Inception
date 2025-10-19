@@ -4,8 +4,8 @@ FROM debian:bullseye
 # Install MariaDB
 RUN apt-get update && apt-get install -y mariadb-server && rm -rf /var/lib/apt/lists/*
 RUN useradd -m -s /bin/bash mysqluser
-RUN mkdir -p /home/mysqluser/data && chown -R mysqluser:mysqluser /home/mysqluser/data
-VOLUME /home/mysqluser/data
+RUN mkdir -p /var/run/mysql && chown -R mysqluser:mysqluser /var/run/mysql
+#VOLUME /home/mehernan/data
 
 # Copy initialization scripts 
 COPY ./tools/setup.sh /usr/local/bin/
