@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e
 
+if [ ! getent group $WORDPRESS_DB_USER > /dev/null 2>&1 ]; then
+	addgroup -S $WORDPRESS_DB_USER;
+fi
+
+if [ ! getent passwd $WORDPRESS_DB_USER > /dev/null 2>&1 ]; then
+	adduser -S -D -H -s $group /sbin/nologin -g $WORDPRESS_DB_USER $WORDPRESS_DB_USER;
+fi
+
+chown -R $WORDPRESS_DB_USER:$WORDPRESS_DB_USER /var/www/html
 # Change to WordPress directory
 cd /var/www/html
 
@@ -11,6 +20,7 @@ until mysqladmin ping -h"$WORDPRESS_DB_HOST" -u "$WORDPRESS_DB_USER" -p"$WORDPRE
     sleep 2
 done
 echo "✅ MariaDB is ready!"
+
 
 # Generate wp-config.php if it doesn’t exist
 if [ ! -f wp-config.php ]; then
@@ -23,6 +33,8 @@ if [ ! -f wp-config.php ]; then
         --dbhost="$WORDPRESS_DB_HOST" \
         --path=/var/www/html
 fi
+
+echo "HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA :D"
 
 # Run WordPress installation if not already installed
 if ! wp core is-installed --allow-root; then
