@@ -2,7 +2,7 @@
 set -e
 
 # Minimal settings
-DATADIR="/home/mysqluser/data"
+DATADIR="/var/lib/mysql"
 OSUSER="mysqluser"
 BIND="0.0.0.0"
 MARKER="$DATADIR/.initialized"
