@@ -5,7 +5,9 @@ services:
     image: mehernan/mariadb
     container_name: mariadb
     volumes:
-      - mariadb_data:/home/mysqluser/data
+#      - mariadb_data:/home/mysqluser/data
+#      - /home/mehernan/data/mariadb:/var/lib/mysql
+      
     env_file:
       - .env
     networks:
