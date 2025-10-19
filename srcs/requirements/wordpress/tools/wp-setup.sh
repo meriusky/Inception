@@ -1,28 +1,21 @@
 #!/bin/bash
 set -e
 
-if [ ! getent group $WORDPRESS_DB_USER > /dev/null 2>&1 ]; then
-	addgroup -S $WORDPRESS_DB_USER;
-fi
-
-if [ ! getent passwd $WORDPRESS_DB_USER > /dev/null 2>&1 ]; then
-	adduser -S -D -H -s $group /sbin/nologin -g $WORDPRESS_DB_USER $WORDPRESS_DB_USER;
-fi
-
-chown -R $WORDPRESS_DB_USER:$WORDPRESS_DB_USER /var/www/html
-# Change to WordPress directory
-cd /var/www/html
-
 # Wait for MariaDB to be ready
 echo "⏳ Waiting for MariaDB..."
-until mysqladmin ping -h"$WORDPRESS_DB_HOST" -u "$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --silent; do
+until mysqladmin ping -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --silent; do
     echo "⏳ MariaDB is unavailable - waiting..."
     sleep 2
 done
 echo "✅ MariaDB is ready!"
 
+# Additional wait to ensure privileges are loaded
+sleep 2
 
-# Generate wp-config.php if it doesn’t exist
+# Change to WordPress directory
+cd /var/www/html
+
+# Generate wp-config.php if it doesn't exist
 if [ ! -f wp-config.php ]; then
     echo "🧩 Setting up wp-config.php..."
     wp config create \
@@ -50,4 +43,3 @@ fi
 
 echo "✅ WordPress is ready!"
 exec "$@"
-
