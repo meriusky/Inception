@@ -17,8 +17,9 @@ if [ ! -d "$DATADIR/mysql" ]; then
 fi
 
 # Only run bootstrap SQL once
+#INIT_SQL="/docker-entrypoint-initdb.d/init.sql"  # <- change here
 INIT_SQL=""
-if [ ! -f "$MARKER" ]; then #cambio
+if [ ! -f "$MARKER" ]; then 
   INIT_SQL="/tmp/init.sql"
   : > "$INIT_SQL"
 
