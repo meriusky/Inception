@@ -16,6 +16,7 @@ down:
 
 # 1.2 make clean → stops and removes containers and images
 clean: down
+	@$(COMPOSE) down -v
 	@docker system prune -af
 	@echo "🧹  Docker system cleaned (containers, images, networks)."
 
