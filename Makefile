@@ -6,8 +6,6 @@ all: up
 
 # 1.1 make or make up → builds and starts containers
 up:
-	@mkdir -p /home/mehernan/data/mariadb #NEW #asegurar que las carpetas data existen
-	@mkdir -p srcs/mysql_data  #NEW      # ensure MariaDB data folder exists
 	@$(COMPOSE) up -d --build
 	@echo "✅  Containers up and running! All done."
 
@@ -24,7 +22,6 @@ clean: down
 
 # 1.3 make fclean → also removes volumes
 fclean: clean
-	@rm -rf srcs/mysql_data   #NEW  # remove local MariaDB data folder
 	@docker volume prune -f
 	@docker network prune -f
 	@echo "🔥  Full cleanup complete (volumes removed)."
