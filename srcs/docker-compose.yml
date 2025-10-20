@@ -2,7 +2,6 @@ services:
   # MariaDB
   mariadb:
     build: ./requirements/mariadb
-    # image: mariadb:12.0.2
     container_name: mariadb
     ports: #changed
       - 127.0.0.1:3306:3306
