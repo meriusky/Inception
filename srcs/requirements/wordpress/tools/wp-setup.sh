@@ -35,11 +35,11 @@ if ! wp core is-installed --allow-root; then
         --admin_password="$WORDPRESS_ADMIN_PASSWORD" \
         --admin_email="$WORDPRESS_ADMIN_EMAIL"
 
-    wp user create "$WORDPRESS_NORMAL_USER" "$WORDPRESS_NORMAL_EMAIL"\
-	    --user_pass="$WORDPRESS_NORMAL_PASSWORD" \
-	    --role=author \
-	    --path=/var/ww/html \
-	    --allow-root
+	wp user create "$WORDPRESS_NORMAL_USER" "$WORDPRESS_NORMAL_EMAIL" \
+        --user_pass="$WORDPRESS_NORMAL_PASSWORD" \
+        --role=author \
+        --path=/var/www/html \
+        --allow-root
 fi
 
 
