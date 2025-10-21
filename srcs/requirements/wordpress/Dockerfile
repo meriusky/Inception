@@ -1,7 +1,7 @@
-# 1.1 Base image: Debian
+# Base image: Debian
 FROM debian:bullseye
 
-# 1.2 Install PHP, PHP-FPM, required extensions, and WP-CLI
+# Install PHP, PHP-FPM, required extensions, and WP-CLI
 RUN apt-get update && apt-get install -y \
     php-fpm \
     php-mysql \
@@ -22,14 +22,14 @@ RUN apt-get update && apt-get install -y \
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
 
-# 1.3 Download WordPress into container
+# Download WordPress into container
 WORKDIR /var/www/html
 
 RUN wget https://wordpress.org/latest.tar.gz && \
     tar -xzf latest.tar.gz --strip-components=1 && \
     rm latest.tar.gz
 
-# 1.4 Configure WordPress dynamically using environment variables
+# Configure WordPress dynamically using environment variables
 # We'll use an entrypoint script for that
 COPY tools/wp-setup.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/wp-setup.sh
@@ -44,6 +44,6 @@ RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 9000
 
+# CMD provides default arguments to the entripoint command (-F runs in the foreground, -R not change the root directory)
 ENTRYPOINT ["wp-setup.sh"]
 CMD ["php-fpm7.4", "-F", "-R"]
-# ENTRYPOINT ["bash", "-c", "while true; do sleep 60; done"]
